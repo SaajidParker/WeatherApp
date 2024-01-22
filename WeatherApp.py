@@ -1,7 +1,9 @@
 import requests
+import tkinter as tk
+from tkinter import simpledialog, messagebox
 
 def get_weather(api_key, city):
-    base_url = "http://api.openweathermap.org/data/2.5/weather"
+    base_url = "http://api.openweathermap.org/data/2.5/forecast"
     params = {
         'q': city,
         'appid': api_key,
@@ -22,24 +24,47 @@ def get_weather(api_key, city):
         print("Failed to connect to the API.")
         return None
 
-def display_weather(weather_data):
+def display_weather_in_gui(weather_data):
     if weather_data:
-        main_info = weather_data['main']
-        weather_info = weather_data['weather'][0]
+        city_info = weather_data['city']
+        forecasts = weather_data['list']
 
-        print(f"Weather in {weather_data['name']}, {weather_data['sys']['country']}:")
-        print(f"Temperature: {main_info['temp']}°C")
-        print(f"Description: {weather_info['description']}")
+        result_text = (
+            f"Weather in {city_info['name']}, {city_info['country']}:\n"
+            f"Current Temperature: {forecasts[0]['main']['temp']}°C\n"
+            f"Description: {forecasts[0]['weather'][0]['description']}\n\n"
+            f"Tomorrow's Weather:\n"
+        )
+
+        if 'rain' in forecasts[1]:
+            result_text += f"Precipitation: {forecasts[1]['rain']['3h']}mm (3-hour forecast)\n"
+        else:
+            result_text += "Precipitation data not available\n"
+
+        result_text += (
+            f"Min Temperature: {forecasts[1]['main']['temp_min']}°C\n"
+            f"Max Temperature: {forecasts[1]['main']['temp_max']}°C\n"
+        )
+
+        root = tk.Tk()
+        root.withdraw()
+        messagebox.showinfo("Weather Information", result_text)
     else:
-        print("Unable to retrieve weather data.")
+        messagebox.showerror("Error", "Unable to retrieve weather data.")
+
+def get_city_from_user():
+    root = tk.Tk()
+    root.withdraw()
+    city = simpledialog.askstring("City", "Enter city name:")
+    return city
 
 def main():
     api_key = 'd3654a5c12054b86b0eff2244171e397'  # Replace with your actual OpenWeatherMap API key
-    city = input("Enter city name: ")
+    city = get_city_from_user()
 
-    weather_data = get_weather(api_key, city)
-
-    display_weather(weather_data)
+    if city:
+        weather_data = get_weather(api_key, city)
+        display_weather_in_gui(weather_data)
 
 if __name__ == "__main__":
     main()
