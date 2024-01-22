@@ -33,7 +33,7 @@ def display_weather_in_gui(weather_data):
         # Round up temperature values
         current_temp = ceil(forecasts[0]['main']['temp'])
         min_temp = ceil(forecasts[1]['main']['temp_min'])
-        max_temp = ceil(forecasts[2]['main']['temp_max'])
+        max_temp = ceil(forecasts[16]['main']['temp_max'])  # Use the last element for max temperature
 
         result_text = (
             f"Weather in {city_info['name']}, {city_info['country']}:\n\n"
@@ -47,8 +47,6 @@ def display_weather_in_gui(weather_data):
             result_text += f"Precipitation: {forecasts[1]['rain']['3h']}mm (3-hour forecast)\n\n"
         else:
             result_text += "Precipitation data not available\n\n"
-
-
 
         root = tk.Tk()
         root.withdraw()
