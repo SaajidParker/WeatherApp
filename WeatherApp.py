@@ -1,6 +1,7 @@
 import requests
 import tkinter as tk
 from tkinter import simpledialog, messagebox
+from math import ceil
 
 def get_weather(api_key, city):
     base_url = "http://api.openweathermap.org/data/2.5/forecast"
@@ -29,22 +30,25 @@ def display_weather_in_gui(weather_data):
         city_info = weather_data['city']
         forecasts = weather_data['list']
 
+        # Round up temperature values
+        current_temp = ceil(forecasts[0]['main']['temp'])
+        min_temp = ceil(forecasts[1]['main']['temp_min'])
+        max_temp = ceil(forecasts[2]['main']['temp_max'])
+
         result_text = (
-            f"Weather in {city_info['name']}, {city_info['country']}:\n"
-            f"Current Temperature: {forecasts[0]['main']['temp']}°C\n"
+            f"Weather in {city_info['name']}, {city_info['country']}:\n\n"
+            f"Current Temperature: {current_temp}°C\n\n"
             f"Description: {forecasts[0]['weather'][0]['description']}\n\n"
-            f"Tomorrow's Weather:\n"
+            f"Min Temperature: {min_temp}°C\n\n"
+            f"Max Temperature: {max_temp}°C\n\n"
         )
 
         if 'rain' in forecasts[1]:
-            result_text += f"Precipitation: {forecasts[1]['rain']['3h']}mm (3-hour forecast)\n"
+            result_text += f"Precipitation: {forecasts[1]['rain']['3h']}mm (3-hour forecast)\n\n"
         else:
-            result_text += "Precipitation data not available\n"
+            result_text += "Precipitation data not available\n\n"
 
-        result_text += (
-            f"Min Temperature: {forecasts[1]['main']['temp_min']}°C\n"
-            f"Max Temperature: {forecasts[1]['main']['temp_max']}°C\n"
-        )
+
 
         root = tk.Tk()
         root.withdraw()
