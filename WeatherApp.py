@@ -33,7 +33,7 @@ def display_weather_in_gui(weather_data):
         # Round up temperature values
         current_temp = ceil(forecasts[0]['main']['temp'])
         min_temp = ceil(forecasts[1]['main']['temp_min'])
-        max_temp = ceil(forecasts[16]['main']['temp_max'])  # Use the last element for max temperature
+        max_temp = ceil(forecasts[1]['main']['temp_max'])  # Use the last element for max temperature
 
         result_text = (
             f"Weather in {city_info['name']}, {city_info['country']}:\n\n"
